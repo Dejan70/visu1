@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style type="text/css">
+      body {
+        background-color: #ffffff;
+        margin: 0;
+        overflow: hidden;
+      }
+      canvas {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+     <link rel="stylesheet" href="/app.css" />
+  </head>
+  <body>
+
+
+    <!--script src="js/three.js"></script-->
+	<script src="js/three.min.121.js"></script>
+    <script src="js/CSS3DRenderer.121.js"></script>
+    <!--script src="js/TrackballControls.js"></script-->
+    <script src="js/GLTFLoader.js"></script>
+    <script src="js/OrbitControls.118.js"></script>
+    <!--script src="/textures/cube.glb"></script-->
+    <nav>
+      <ul>
+        <li><a href="/">Back</a></li>
+        <li>
+          <a
+            href="https://github.com/lostways/three-js-wrapper/blob/master/examples/canvas-text.html"
+            >View Code</a
+          >
+        </li>
+      </ul>
+    </nav>
+    <canvas id="canvas"></canvas>
+    
+    
+    <script  type="module">
+
+
+import ThreeJSWrapper from "/three-js-wrapper.module.js";
+import { ThreeJSEntity } from "/three-js-wrapper.module.js";
+      var camera, sceneGl, rendererGl, light;
+      var sceneCss,sceneCss1, rendererCss;
+      var controls;
+      var a,b,c,m,a1,b1,c1;
+      a=0; b=0;a1=0,b1=0; c1=0;
+      c=100;m=0;
+
+      init();
+      animate();
+
+      function init() {
+        camera = new THREE.PerspectiveCamera(
+          45,
+          window.innerWidth / window.innerHeight,
+          1,
+          1000
+        );
+    //    camera.position.set(a, b, c);
+    camera.position.set(0, 0, 110);
+    
+        sceneGl = new THREE.Scene();
+        sceneCss = new THREE.Scene({ alpha: true });
+        sceneCss1 = new THREE.Scene({ alpha: true });
+
+              //light  
+            //  light = new THREE.PointLight( 0xff0000, 1, 100 );
+               light = new THREE.AmbientLight( 0xE5E5E5,1, 100 );
+light.position.set( 50, 50, 50 );
+
+sceneGl.add( light );
+        //light end
+
+//plane  start
+
+  var geometry1 = new THREE.PlaneGeometry( 300, 300 );
+ //var material1 = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
+ var material1 = new THREE.MeshBasicMaterial( {color: 0x222222, side: THREE.DoubleSide} );
+var plane1 = new THREE.Mesh( geometry1, material1 );
+plane1.position.set(80, -40, 0);
+//plane1.rotation.set(33, 0, 0);
+plane1.rotateX(Math.PI / 180 * 90);
+plane1.renderOrder=200;
+//sceneGl.add( plane1 );
+
+//plane end
+/////*******------*******----------*************--------------***********-
+///***
+
+const size = 300;
+const divisions = 10;
+//const colorLinesCenter = 0x161716;
+const colorLinesCenter = 0x3d3f3d;
+//const colorLinesGrid = new THREE.Color(0x161716);
+const colorLinesGrid = new THREE.Color(0x3d3f3d);
+const gridHelper = new THREE.GridHelper( size, divisions,colorLinesGrid,colorLinesCenter, );
+sceneGl.add( gridHelper );
+/*
+var labelRenderer = new CSS3DRenderer();
+labelRenderer.setSize( innerWidth, innerHeight );
+labelRenderer.domElement.style.position = 'absolute';
+labelRenderer.domElement.style.top = '0px';
+document.body.appendChild( labelRenderer.domElement );
+var div = document.createElement( 'div' );
+div.className = 'label';
+div.textContent = '1';
+var label20 = new CSS3DObject( div );
+label20.position.copy(pos);
+label20.rotation.y = Math.PI * 0.5;
+label20.scale.set(0.025, 0.025, 1);
+box.add( label20 );
+sceneGl.add(box)
+*/
+var box = new THREE.Mesh(new THREE.BoxBufferGeometry(4, 2, 2), new THREE.MeshLambertMaterial({color: 0x0088ff, wireframe: false}));
+sceneCss.add(box);
+
+///***
+
+//////*************-----------***********------------************-
+//plane1  start
+
+var geometry2 = new THREE.PlaneGeometry( 30, 30 );
+ //var material1 = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
+ var material2 = new THREE.MeshBasicMaterial({ antialias: true, alpha: true }  );
+var plane2 = new THREE.Mesh( geometry2, material2 );
+plane2.position.set(80, 20, 0);
+material2.transparent=true;
+//plane1.rotation.set(33, 0, 0);
+//plane2.rotateX(Math.PI / 180 * 90);
+sceneGl.add( plane2 );
+
+//plane1 end
+    //Label1 test  start
+       //
+ 
+       var element270 = document.createElement("label");
+      //  const button = makeHtmlCssObject( 'button', 40, 40 );
+element270.textContent = '27 label';
+element270.id = 'someId';
+//element27.style.border = '1px solid #444444';  bilo je
+//element27.style.borderRadius = '50%';
+element270.style.fontSize = '10px';
+element270.style.color = "green";
+
+
+
+var object270 = new THREE.CSS3DObject(element270);
+        object270.position.set(-20.5, 40, 0);
+        object270.scale.x = 0.15;
+        object270.scale.y = 0.15;
+       // sceneCss.add(object270);
+       plane2.add(object270);
+        //button 7 end 
+
+        //Label1 test end
+      
+
+//
+        //proba loader start 1
+        var loader = new THREE.GLTFLoader();
+//		loader.load('cube.glb', handle_load);
+    loader.load('cubes.gltf', handle_load1);
+		var mesh5;
+//console.log(mesh5);
+	function handle_load1(gltf)
+	{
+        mesh5 = gltf.scene;
+     //  sceneGl.add( mesh );//radi
+    mesh5.position.set(0, 0, 30);
+    mesh5.scale.x = 0.5;
+    mesh5.scale.y = 0.5;
+    sceneGl.add( mesh5 );//radi
+    console.log(mesh5);
+      
+	}
+
+        var loader2 = new THREE.GLTFLoader();
+//		loader.load('cube.glb', handle_load);
+    loader2.load('2_txt.glb', handle_load);
+		var mesh6;
+//console.log(mesh5);
+	function handle_load(gltf)
+	{
+        mesh6 = gltf.scene;
+     //  sceneGl.add( mesh );//radi
+    mesh6.position.set(0, 20, 30);
+    mesh6.scale.x = 0.5;
+    mesh6.scale.y = 0.5;
+    sceneGl.add( mesh6 );//radi
+    console.log(mesh6);
+    //model.getObjectByName('Cube').material.color.setHex(0x00FF00);#FF5733
+   // mesh5.getObjectByName('Cube').material.color.setHex(0xFF5733);//0xFF5733//0x00FF00
+      
+	}
+
+//*********************   new gltf loader  dc1
+var loader3 = new THREE.GLTFLoader();
+//		loader.load('cube.glb', handle_load);
+    loader3.load('12_jan_2024_color.glb', handle_load);
+		var mesh7;
+//console.log(mesh5);
+	function handle_load(gltf)
+	{
+        mesh7 = gltf.scene;
+     //  sceneGl.add( mesh );//radi
+    mesh7.position.set(0, 23, 30);
+    mesh7.scale.x = 10;
+    mesh7.scale.y = 10;
+    mesh7.scale.z = 10;
+    sceneGl.add( mesh7 );//radi
+    console.log(mesh7);
+    //model.getObjectByName('Cube').material.color.setHex(0x00FF00);#FF5733
+   // mesh5.getObjectByName('Cube').material.color.setHex(0xFF5733);//0xFF5733//0x00FF00
+      
+	}
+
+//******************new gltf loader  end
+    //aaa
+    var elemente11 = document.createElement("iframe");
+     //   element.src = "//aframe.io/";
+   //  element.src = "https://naslovi.net/vremenska-prognoza/beograd";  //http://localhost:1880/Moon.html
+
+     elemente11.src = "https://www.kurir.rs";  //mali // taj je  !!!!!!!!!!
+      //  elemente11.style.width = size_x + "px";
+      //  elemente11.style.height = size_y + "px";
+
+        var object11 = new THREE.CSS3DObject(elemente11);
+     //   object.position.set(0, 0, 0);//camera.position
+     object11.position.set(50, 30, 0);
+        object11.scale.x = 0.05;
+        object11.scale.y = 0.05;
+        sceneCss.add(object11); // prvi  ekran
+      //aaa 
+    
+//  ekran za dc1 glatf  start
+
+//  ekran za dc1 glatf  end
+//-*-*-*-*-*-*-*-*
+        var material = new THREE.MeshBasicMaterial({
+          color: 0x000000,
+          opacity: 0.01,
+          side: THREE.DoubleSide,
+        //  transparent: true
+        });
+        
+
+        var size_x = 1024;
+        var size_y = 1024;
+
+        var element = document.createElement("iframe");
+  
+
+     element.src = "https://naslovi.net/vremenska-prognoza/beograd";  //mali  //"https://www.kurir.rs"   //  drugi_ekran
+        element.style.width = size_x + "px";
+        element.style.height = size_y + "px";
+
+        var object = new THREE.CSS3DObject(element);
+     //   object.position.set(0, 0, 0);//camera.position
+     object.position.set(20, 0, 0);
+        object.scale.x = 0.005;
+        object.scale.y = 0.005;
+        sceneGl.add(object);
+        
+      //aaa  screen na assembly
+      var elemente = document.createElement("iframe");
+     //   element.src = "//aframe.io/";
+   //  element.src = "https://naslovi.net/vremenska-prognoza/beograd";  //http://localhost:1880/Moon.html
+
+     elemente.src = "https://www.kurir.rs";  //mali1 // taj je  !!!!!!!!!!
+        elemente.style.width = size_x + "px";
+        elemente.style.height = size_y + "px";
+
+        var object1 = new THREE.CSS3DObject(elemente);
+     //   object.position.set(0, 0, 0);//camera.position
+     object1.position.set(-30, 110, 86);
+        object1.scale.x = 0.04;
+        object1.scale.y = 0.03;
+        object1.rotation.set(-0.37, 0, 0);
+        sceneCss.add(object1); // prvi  ekran
+      //aaa  
+         //aaa  screen na masini
+      var elementea = document.createElement("iframe");
+     //   element.src = "//aframe.io/";
+   //  element.src = "https://naslovi.net/vremenska-prognoza/beograd";  //http://localhost:1880/Moon.html
+
+     elementea.src = "https://www.kurir.rs";  //mali1 // taj je  !!!!!!!!!!
+        elementea.style.width = size_x + "px";
+        elementea.style.height = size_y + "px";
+
+        var object1a = new THREE.CSS3DObject(elementea);
+      //  object.position.set(0, 0, 0);//camera.position
+     object1a.position.set(-30, 110, 10);//  bilo je
+   // object1a.position.set(-30, 0, 10);
+        object1a.scale.x = 0.04;
+        object1a.scale.y = 0.03;
+        object1a.rotation.set(0, Math.PI * 0.50, 0);
+        sceneCss.add(object1a); // prvi  ekran
+      //aaa   screen na masini  end
+
+        //aaa   screen na masini2  starrt
+        var elementea1 = document.createElement("iframe");
+        elementea1.src = "https://naslovi.net/vremenska-prognoza/beograd";  //mali1 // taj je  !!!!!!!!!!
+        elementea1.style.width = size_x + "px";
+        elementea1.style.height = size_y + "px";
+
+        var object1a1 = new THREE.CSS3DObject(elementea1);
+      //  object.position.set(0, 0, 0);//camera.position
+     object1a1.position.set(-33, 110, 10);//  bilo je
+   // object1a.position.set(-30, 0, 10);
+        object1a1.scale.x = 0.04;
+        object1a1.scale.y = 0.03;
+        object1a1.rotation.set(0,-Math.PI * 0.50, 0);
+        sceneCss.add(object1a1); // prvi  ekran
+        //aaa   screen na masini2  end
+
+
+
+
+        //test new
+        var element100 = document.createElement("iframe");
+     //   element.src = "//aframe.io/";
+   //  element.src = "https://naslovi.net/vremenska-prognoza/beograd";  //http://localhost:1880/Moon.html
+
+     element100.src = "https://naslovi.net/vremenska-prognoza/beograd";
+        element100.style.width = size_x + "px";
+        element100.style.height = size_y + "px";
+
+        var object100 = new THREE.CSS3DObject(element100);//drugi_mali_ekran
+        object100.position.set(0, 0, 0);
+        
+        object100.scale.x = 0.005;
+        object100.scale.y = 0.005;
+        sceneCss.add(object100);
+        //test new end
+        
+   //  proba button  2css
+ //  var moonDiv = document.createElement( 'div' );
+
+   //
+     //button 2
+     var element2 = document.createElement("button");
+      //  const button = makeHtmlCssObject( 'button', 40, 40 );
+      var m=0.1;
+      var n= 0.1;
+      var lr= 0.1;
+element2.textContent = 'X23 rot left';
+element2.style.border = '1px solid #444444';
+element2.style.borderRadius = '50%';
+element2.style.fontSize = '10px';
+
+element2.addEventListener('click', () => {
+
+m=m+0.1;
+//sceneCss.rotation.set(0, m, 0);
+//console.log(camera.position.x);
+//document.getElementById("container");//someId
+document.getElementById("someId").innerHTML=777;
+console.log("aa");
+})
+
+element2.style.background = '#dedede';
+//button.position.y = -50;
+//base.add ( button );
+
+var object2 = new THREE.CSS3DObject(element2);
+        object2.position.set(-85, 40, 0);
+        object2.scale.x = 0.12;
+        object2.scale.y = 0.17;
+     //   sceneCss.add(object2);
+     object2.renderOrder=100;
+     sceneGl.add(object2);
+        //button2 end
+
+        //button 3someId
+        var element3 = document.createElement("button");
+      //  const button = makeHtmlCssObject( 'button', 40, 40 );
+element3.textContent = 'x3 rot right';
+element3.style.border = '1px solid #444444';
+element3.style.borderRadius = '50%';
+element3.style.fontSize = '10px';
+
+element3.addEventListener('click', () => {
+ // camera.position.set(0, 0, 100);
+ //sceneCss.rotation.set(0, 0,Math.PI * 0.05 );
+ m=m-0.1;
+ sceneCss.rotation.set(0, m, 0);
+// object3.position.set(a-83, b+40, c-100);
+// object2.position.set(0, 32, 0);
+document.getElementById("someId").innerHTML=333;
+document.getElementById("someId1").innerHTML=555;
+  console.log("aa");
+  console.log("b3a: "+a+"b: "+b+"c"+c);})
+
+element3.style.background = '#dedede';
+//button.position.y = -50;
+//base.add ( button );
+
+var object3 = new THREE.CSS3DObject(element3);
+       object3.position.set(-79, 40, 0);//bilo je
+  //   a=0;b=0;c=100;
+        //object3.position.set(a-83, b+40, c-100);
+        object3.scale.x = 0.12;
+        object3.scale.y = 0.17;
+     
+        sceneCss1.add(object3);
+        //button3 end
+
+                //button 4
+                var element4 = document.createElement("button");
+      //  const button = makeHtmlCssObject( 'button', 40, 40 );
+element4.textContent = 'x4 near';
+element4.style.border = '1px solid #444444';
+element4.style.borderRadius = '50%';
+element4.style.fontSize = '10px';
+
+element4.addEventListener('click', () => {
+
+n=n+1;
+sceneCss.position.set(lr, m, n);
+//camera.position.set(100, 50, 100);
+a=a+1;
+
+n=n+10;
+sceneCss.position.set(lr, m, n);
+
+a1=m-a;
+a1=0;
+//sceneCss1.position.set(a, b1, c1-100);
+
+console.log("button  a: "+a+"  b: "+b+"c: "+c);
+console.log("css1    a1: "+a1+"  b1: "+b1+"c1: "+c1);
+  console.log("aa");
+
+})
+
+element4.style.background = '#dedede';
+//button.position.y = -50;
+//base.add ( button );
+
+var object4 = new THREE.CSS3DObject(element4);
+        object4.position.set(-82, 35, 0);
+        object4.scale.x = 0.12;
+        object4.scale.y = 0.17;
+        sceneCss1.add(object4);
+        //button4 end
+
+              //button 5
+              var element5 = document.createElement("button");
+      //  const button = makeHtmlCssObject( 'button', 40, 40 );
+element5.textContent = 'cub1re';
+element5.style.border = '1px solid #444444';
+element5.style.borderRadius = '50%';
+element5.style.fontSize = '10px';
+
+element5.addEventListener('click', () => {
+  n=n-10;
+//sceneCss.position.set(lr, m, n);
+mesh5.getObjectByName('Cube').material.color.setHex(0xFF5733);//0xFF5733//0x00FF00
+mesh5.getObjectByName('Cube001').material.color.setHex(0xFF5733);//0xFF5733//0x00FF00
+mesh6.getObjectByName('Text002').material.color.setHex(0xFF5733);//0xFF5733//0x00FF00
+//mesh6.getObjectByName('Text002').innerText='777'
+//mesh6.getObjectByName('Text002').object.userData.text = 'This is my text.';
+//mesh6.getObjectByName('Text002').text = 'This is my text.';
+ tet='fucky';
+ //sceneGl.remove(textGeo);
+ //group.remove(text);
+ //sceneGl.remove(group);
+      // createText();
+      text1();
+       // animate();
+  console.log("aa");
+})
+
+element5.style.background = '#dedede';
+//button.position.y = -50;
+//base.add ( button );
+
+var object5 = new THREE.CSS3DObject(element5);
+        object5.position.set(-82, 37, 0);
+        object5.scale.x = 0.12;
+        object5.scale.y = 0.17;
+        sceneCss1.add(object5);
+        //button 5 end      
+  //button 6
+ 
+  var element6 = document.createElement("button");
+      //  const button = makeHtmlCssObject( 'button', 40, 40 );
+element6.textContent = 'cub1gre ';
+element6.style.border = '1px solid #444444';
+element6.style.borderRadius = '50%';
+element6.style.fontSize = '10px';
+
+element6.addEventListener('click', () => {
+  lr=lr-10;
+  mesh5.getObjectByName('Cube').material.color.setHex(0x00FF00);//0xFF5733//0x00FF00
+  mesh6.getObjectByName('Text002').material.color.setHex(0x00FF00);//0xFF5733//0x00FF00
+ // sceneGl.add(text)
+//  scene.remove(object.name);
+//sceneGl.remove(text);
+//sceneGl.remove(group);
+   tet='fuckyly'
+       // createText();
+       text1();
+     //   animate();
+//sceneCss.position.set(lr, m, n);
+  console.log("aa");})
+
+element6.style.background = '#dedede';
+//button.position.y = -50;
+//base.add ( button );
+
+var object6 = new THREE.CSS3DObject(element6);
+        object6.position.set(-88.5, 37, 0);
+        object6.scale.x = 0.12;
+        object6.scale.y = 0.17;
+        sceneCss1.add(object6);
+        //button 6 end   
+          //button 7
+ 
+  var element7 = document.createElement("button");
+      //  const button = makeHtmlCssObject( 'button', 40, 40 );
+element7.textContent = 'x7 righ';
+
+element7.style.border = '1px solid #444444';
+element7.style.borderRadius = '50%';
+element7.style.fontSize = '10px';
+
+element7.addEventListener('click', () => {
+  lr=lr+10;
+sceneCss.position.set(lr, m, n);
+
+  console.log("aa");
+  console.log("  lr: "+lr+"  m: "+m+"n: "+n);
+console.log("css1    a1: "+a1+"  b1: "+b1+"c1: "+c1);})
+
+element7.style.background = '#dedede';
+//button.position.y = -50;
+//base.add ( button );
+
+var object7 = new THREE.CSS3DObject(element7);
+        object7.position.set(-77.5, 36.2, 0);
+        object7.scale.x = 0.12;
+        object7.scale.y = 0.15;
+        sceneCss1.add(object7);
+        //button 7 end  
+        //Label test  start
+       //
+ 
+       var element27 = document.createElement("label");
+      //  const button = makeHtmlCssObject( 'button', 40, 40 );
+element27.textContent = '27 labell';
+element27.id = 'someId';
+//element27.style.border = '1px solid #444444';  bilo je
+//element27.style.borderRadius = '50%';
+element27.style.fontSize = '10px';
+element27.style.color = "green";
+
+
+var object27 = new THREE.CSS3DObject(element27);
+        object27.position.set(-20.5, 30, 0);
+        object27.scale.x = 0.15;
+        object27.scale.y = 0.15;
+        sceneCss1.add(object27);
+        //button 7 end 
+//aaaaaaaaaaaaa
+var element26 = document.createElement("div");
+     
+element26.textContent = '26';
+element26.id = 'someId1';
+//element27.style.border = '1px solid #444444';  bilo je
+//element27.style.borderRadius = '50%';
+element26.style.fontSize = '10px';
+element26.style.color = "green";
+
+var object26 = new THREE.CSS3DObject(element26);
+        object26.position.set(-20.5, 35, 0);
+        object26.scale.x = 0.15;
+        object26.scale.y = 0.15;
+        sceneCss1.add(object26);
+
+
+
+              //test 1 new
+              var element8 = document.createElement("iframe");
+     //   element.src = "//aframe.io/";
+   //  element.src = "https://naslovi.net/vremenska-prognoza/beograd";  //http://localhost:1880/Moon.html
+
+     element8.src = "https://www.kurir.rs";
+        element8.style.width = size_x + "px";
+        element8.style.height = size_y + "px";
+
+        var object8 = new THREE.CSS3DObject(element8);
+        object8.position.set(105, 0, 12);
+        object8.rotation.set(0, -0.6, 0);
+        object8.scale.x = 0.05;
+        object8.scale.y = 0.05;
+        sceneCss.add(object8);
+        //test1 new end
+
+                 //test 1 new
+                 var element9 = document.createElement("iframe");
+     //   element.src = "//aframe.io/";
+   //  element.src = "https://naslovi.net/vremenska-prognoza/beograd";  //http://localhost:1880/Moon.html
+
+     element9.src = "https://www.kurir.rs";
+        element9.style.width = size_x + "px";
+        element9.style.height = size_y + "px";
+
+        var object9 = new THREE.CSS3DObject(element9);
+        object9.position.set(135, 0, 55);
+        object9.rotation.set(0, -1.3, 0);
+        object9.scale.x = 0.05;
+        object9.scale.y = 0.05;
+        sceneCss.add(object9);
+        //test1 new end
+
+         //test 2 new
+              var element10 = document.createElement("iframe");
+
+        //new 12
+        var element12 = document.createElement("iframe");
+
+        //oooooooooooooooooooooooooooooobject1
+   
+
+//Text Canvas
+//export default class TextCanvas extends ThreeJSEntity {
+
+        //-o-o-oo--o-o-o-o-o-o-o-o-o-o
+    
+        var geometry = new THREE.PlaneGeometry(size_x, size_y);//
+        var mesh = new THREE.Mesh(geometry, material);
+        mesh.position.copy(object.position);
+        mesh.rotation.copy(object.rotation);
+        mesh.scale.copy(object.scale);
+        sceneGl.add(mesh);
+
+        var mesh1 = new THREE.Mesh(geometry, material);
+     //   mesh1.transparent;  prvi ekran
+        mesh1.position.copy(object1.position);
+        mesh1.rotation.copy(object1.rotation);
+        mesh1.scale.copy(object1.scale);
+        sceneGl.add(mesh1);
+
+
+        var mesh15 = new THREE.Mesh(geometry, material);
+     //   mesh1.transparent;  prvi ekran
+        mesh15.position.copy(object1a.position);
+        mesh15.rotation.copy(object1a.rotation);
+        mesh15.scale.copy(object1a.scale);
+        sceneGl.add(mesh15);
+
+        var mesh16 = new THREE.Mesh(geometry, material);
+     //   mesh1.transparent;  prvi ekran
+        mesh16.position.copy(object1a1.position);
+        mesh16.rotation.copy(object1a1.rotation);
+        mesh16.scale.copy(object1a1.scale);
+        sceneGl.add(mesh16);
+
+        
+
+        //dodavanje ekrana2  drugi_mali_ekran
+        var mesh3 = new THREE.Mesh(geometry, material);
+        mesh3.position.copy(object100.position);
+        mesh3.rotation.copy(object100.rotation);
+        mesh3.scale.copy(object100.scale);
+        sceneGl.add(mesh3);
+/*
+        var mesh4 = new THREE.Mesh(geometry, material);
+        mesh4.position.copy(object11.position);
+        mesh4.rotation.copy(object11.rotation);
+        mesh4.scale.copy(object11.scale);
+        sceneGl.add(mesh4);
+*/
+
+//object27  dodavanje
+
+var mesh2 = new THREE.Mesh(geometry, material);
+
+        mesh2.position.copy(object27.position);
+        mesh2.rotation.copy(object27.rotation);
+        mesh2.scale.copy(object27.scale); 
+        
+       // plane2.add(mesh2);   
+    //   sceneGl.add(mesh2);     
+
+
+
+        var geometry = new THREE.BoxGeometry(40, 10, 30);
+        var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+     // var material = new THREE.MeshBasicMaterial(object26);
+        var cube1 = new THREE.Mesh(geometry, material);
+        cube1.position.set(40, 0, 20);
+        cube1.position.copy(new THREE.Vector3(0, 0, 20));
+       sceneGl.add(cube1);
+/*
+        var geometry = new THREE.BoxGeometry(10, 10, 10);
+        var material = new THREE.MeshBasicMaterial({ color: 0x0000ff });
+        var cube2 = new THREE.Mesh(geometry, material);
+        cube2.position.copy(new THREE.Vector3(0, 0, -50));
+        plane1.add(cube2);
+*/
+        rendererCss = new THREE.CSS3DRenderer({ alpha: true });
+        rendererCss.setSize(window.innerWidth, window.innerHeight);
+       // rendererCss.setClearColor(0x00ff00, 0.0);
+        rendererCss.domElement.style.position = "absolute";
+        rendererCss.domElement.style.top = 0;
+
+        rendererGl = new THREE.WebGLRenderer({ alpha: true });
+        rendererGl.setClearColor(0x00ff00, 0.0);
+        rendererGl.setSize(window.innerWidth, window.innerHeight);
+        rendererGl.domElement.style.position = "absolute";
+        // rendererGl.domElement.style.zIndex = 1;
+        rendererGl.domElement.style.top = 0;
+        // this did the trick!
+        rendererGl.domElement.style.pointerEvents = "none";
+        // also this helped:
+        // http://www.hudault.de/3d-interaktive-webseite-mit-slider-in-threejs-webgl-scene
+
+        rendererCss.domElement.appendChild(rendererGl.domElement);
+        document.body.appendChild(rendererCss.domElement);
+        const controls = new THREE.OrbitControls( camera, rendererCss.domElement);
+      //  sceneCss1.add(object27);
+        //proba text geomety  new start  OK RADI
+        //---------------------------
+        
+
+        text1()
+        function text1(){
+        var group;
+        group = new THREE.Group();
+			//	group.position.y = 100;
+
+				
+        
+        createText()
+        function createText() {
+        var cubeMat = new THREE.MeshLambertMaterial({color: 0xff3300})
+  var loader1 = new THREE.FontLoader();
+    loader1.load('helvetiker_regular.typeface.js', function (res) {
+      font = res;
+      
+    //  textGeo = new THREE.TextGeometry( 'FUCK YOU', {
+      textGeo = new THREE.TextBufferGeometry( tet, {   
+  //    textGeo = new THREE.TextBufferGeometry( "cincin", {
+      font: font,
+      size: size,
+      height: height,
+      curveSegments:curveSegments,
+      weight: "normal",
+      bevelThickness:bevelThickness,
+      bevelSize:bevelSize,
+      bevelSegments:bevelSegments,
+      bevelEnabled:bevelEnabled
+    });
+textGeo.computeBoundingBox();
+    textGeo.computeVertexNormals();
+
+    var text = new THREE.Mesh(textGeo, cubeMat)
+    text.position.x = -textGeo.boundingBox.max.x/2;
+    text.castShadow = true;
+   // sceneGl.remove( text )
+  //  sceneGl.add(text)
+  group.add(text)
+  sceneGl.add( group );
+    });
+    var text = "aems",
+        height = 2,
+        size = 10,
+        curveSegments = 10,
+        bevelThickness = 1,
+        bevelSize = 0.3,
+        bevelSegments = 3,
+        bevelEnabled = true,
+        font = undefined
+      }
+    };
+        //-------------
+////////////////////////////////////////////////////TEXTBUFERGEOM START
+/*
+init();
+function init() {
+var loader4 = new THREE.FontLoader();
+    loader4.load('helvetiker_regular.typeface.js', function (res) {
+    //  font = res;
+      
+    //  textGeo = new THREE.TextGeometry( 'FUCK YOU', {
+      
+     var  geometry4 = new THREE.TextBufferGeometry( "tet", {
+      font: font,
+      size: 50,
+      size: 50,
+
+     // height: height,
+     height: 30,
+      curveSegments:curveSegments,
+      weight: "normal",
+      bevelThickness:bevelThickness,
+      bevelSize:bevelSize,
+      bevelSegments:bevelSegments,
+      bevelEnabled:bevelEnabled
+    });
+    let textMaterial = new THREE.MeshBasictMaterial({color: 0xff3300})
+    var mesh8 = new THREE.Mesh(geometry4, textMaterial)
+    sceneCss.add(mesh8);
+  });
+};
+*/
+///////////////////////////////////////////////////TEXTBUFERGEOM END
+        /*
+        var group;
+        group = new THREE.Group();
+			//	group.position.y = 100;
+
+				
+        var tet='fuckisa'
+        createText()
+        function createText() {
+        var cubeMat = new THREE.MeshLambertMaterial({color: 0xff3300})
+  var loader1 = new THREE.FontLoader();
+    loader1.load('helvetiker_regular.typeface.js', function (res) {
+      font = res;
+      
+    //  textGeo = new THREE.TextGeometry( 'FUCK YOU', {
+      
+      textGeo = new THREE.TextGeometry( tet, {
+      font: font,
+      size: size,
+      height: height,
+      curveSegments:curveSegments,
+      weight: "normal",
+      bevelThickness:bevelThickness,
+      bevelSize:bevelSize,
+      bevelSegments:bevelSegments,
+      bevelEnabled:bevelEnabled
+    });
+textGeo.computeBoundingBox();
+    textGeo.computeVertexNormals();
+
+    var text = new THREE.Mesh(textGeo, cubeMat)
+    text.position.x = -textGeo.boundingBox.max.x/2;
+    text.castShadow = true;
+   // sceneGl.remove( text )
+  //  sceneGl.add(text)
+  group.add(text)
+  sceneGl.add( group );
+    });
+    var text = "aems",
+        height = 2,
+        size = 10,
+        curveSegments = 10,
+        bevelThickness = 1,
+        bevelSize = 0.3,
+        bevelSegments = 3,
+        bevelEnabled = true,
+        font = undefined
+      }
+
+      //new  text
+//proba text geomety  new end  OK RADI
+*/
+ //------------add text geometry----------
+//start  *****************************************  START
+    //group to hold mesh
+   /* 
+    group3 = new three.group();
+    //this.scene.add(group);
+    sceneCss.add(group3);
+
+   //add clock mesh
+    starttime = new date();
+    earthclockmesh = this.gettextmesh(starttime.tolocalestring(), textmaterial);
+    group3.add(earthclockmesh);
+
+
+      //------------update text  mesh----------
+
+      //remove old mesh
+      group3.remove(earthclockmesh);
+
+      //add new mesh
+      earthclockmesh = this.gettextmesh(
+        new date(timenow).tolocalestring(),
+        textmaterial
+      );
+      group3.add(earthclockmesh);
+      //end first part
+      //second part
+      gettextmesh = (text, material) => {
+    //number
+    var textgeometry = new textbuffergeometry(
+      text,
+      object.assign(
+        {},
+        {
+          font: helvatiker,
+          bevelenabled: false,
+          curvesegments: 8,
+          bevelthickness: 1,
+          bevelsize: 0,
+          height: 0.7,
+          size: 5
+        }
+      )
+    );
+    let numbermesh = new three.mesh(textgeometry, material);
+    // wireframe
+    var geo = new three.edgesgeometry(numbermesh.geometry); // or wireframegeometry
+
+    var wireframe = new three.linesegments(geo, wireframematerial);
+    numbermesh.add(wireframe);
+
+    // translate to center
+    return numbermesh;
+  };
+  //second part end
+  */
+//*******************************************************************END
+
+///end trxt geometry
+        //rendererCss.setClearColor( 0x000000, 0 ); // the default
+      }
+
+      function animate() {
+        requestAnimationFrame(animate);
+
+       // controls.update();
+      // rendererCss.clearDepth();
+      rendererCss.autoClear = false;
+        rendererCss.render(sceneCss, camera);
+      
+        rendererCss.render(sceneCss1, camera);
+        
+        rendererGl.render(sceneGl, camera);
+        rendererCss.clearDepth();
+      }
+    </script>
+
+
+  </body>
+</html>

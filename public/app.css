@@ -1,0 +1,150 @@
+:root {
+  --text-color: #f3f3f3;
+  --border: 1px solid var(--text-color);
+  --grid-break: 960px;
+  --font-family-mono: Courier New, monospace;
+}
+
+body {
+  background-color: #000000;
+}
+
+nav {
+  position: absolute;
+  right: 20px;
+}
+
+nav ul {
+  display: flex;
+}
+
+nav li {
+  list-style-type: none;
+  display: inline-block;
+  padding: 0px 10px;
+  border-right: var(--border);
+  border-bottom: var(--border);
+  border-top: var(--border);
+  border-left: var(--border);
+}
+
+nav li:not(:last-child):not(only-child) {
+  border-right: none;
+}
+
+nav li:hover {
+  background-color: #333333;
+}
+
+nav a {
+  text-decoration: none;
+  color: #f3f3f3;
+  font-family: var(--font-family-mono);
+  font-size: 1rem;
+}
+
+.main:not(.dg) {
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: auto;
+  grid-gap: 1rem;
+  max-width: 1525px;
+  margin: 0 auto;
+  padding: 0 10px;
+}
+
+h1,
+h2 {
+  color: var(--text-color);
+  font-family: Arial;
+  text-transform: uppercase;
+  font-size: 4rem;
+  font-style: italic;
+  justify-self: center;
+}
+
+h1 {
+  margin-bottom: 35px;
+}
+
+h2 {
+  font-size: 3em;
+  text-decoration: underline;
+}
+
+.intro {
+  color: var(--text-color);
+  font-size: 2em;
+  font-family: "Times New Roman", serif;
+  justify-self: center;
+  margin-bottom: 2em;
+}
+
+.intro p {
+  margin: 2px 0px;
+}
+
+.intro a {
+  color: var(--text-color);
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  gap: 1rem;
+  margin: 0 auto;
+}
+
+.card {
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  max-width: 400px;
+}
+
+.card:hover {
+  transform: scale(1.025);
+  transition: all 0.2s ease-in-out;
+}
+
+.card a {
+  text-decoration: none;
+  height: 100%;
+  align-items: end;
+  display: grid;
+  grid-template-rows: min-content max-content;
+}
+
+.card img {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.card h3 {
+  color: var(--text-color);
+  font-family: Arial;
+  font-size: 1.5rem;
+  writing-mode: vertical-rl;
+  margin: 0px;
+  align-self: baseline;
+  grid-area: 1 / 1;
+  font-weight: bold;
+  letter-spacing: 1px;
+  transform: rotate(-180deg);
+  margin-bottom: 3px;
+}
+
+@media (max-width: 620px) {
+  .card h3 {
+    writing-mode: horizontal-tb;
+    transform: none;
+  }
+}
+
+/** dat.gui styles **/
+.dg.ac {
+  top: 3rem !important;
+}
